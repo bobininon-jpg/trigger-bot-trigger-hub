@@ -1,0 +1,10 @@
+modLoader="javafml"
+loaderVersion="[35,)"
+license="MIT"
+
+[[mods]]
+modId="xobonmod"
+version="1.0"
+displayName="Xobon Project"
+authors="Xobon"
+description="TriggerBot and more"
