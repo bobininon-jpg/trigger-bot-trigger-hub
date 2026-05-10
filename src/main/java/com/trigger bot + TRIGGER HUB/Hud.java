@@ -12,40 +12,30 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class Hud {
     private final Minecraft mc = Minecraft.getInstance();
-    private int x = 10; // Position X
-    private int y = 50; // Position Y
 
     @SubscribeEvent
     public void onRender(RenderGameOverlayEvent.Post event) {
-        if (event.getType() == RenderGameOverlayEvent.ElementType.ALL && mc.player != null) {
+        if (event.getType() == RenderGameOverlayEvent.ElementType.ALL) {
             LivingEntity target = TriggerBot.getCurrentTarget();
-            
             if (target != null && target.isAlive()) {
                 MatrixStack ms = event.getMatrixStack();
+                int x = 10, y = 50;
                 
                 // Background
                 AbstractGui.fill(ms, x, y, x + 120, y + 40, 0x90000000);
                 
-                // Skin Face
-                if (target instanceof PlayerEntity) {
-                    ResourceLocation skin = ((AbstractClientPlayerEntity)target).getLocationSkin();
-                    mc.getTextureManager().bindTexture(skin);
-                    AbstractGui.blit(ms, x + 5, y + 5, 32, 32, 8, 8, 8, 8, 64, 64);
-                }
-
-                // Name and HP text
+                // Name
                 mc.fontRenderer.drawString(ms, target.getName().getString(), x + 42, y + 5, 0xFFFFFF);
-                mc.fontRenderer.drawString(ms, (int)target.getHealth() + " HP", x + 42, y + 28, 0xFFFFFF);
-
-                // Health Bar logic
+                
+                // Health Bar
                 float health = target.getHealth();
                 float maxHealth = target.getMaxHealth();
-                float healthWidth = (70 * (health / maxHealth));
-
-                // Empty Bar (Dark Red)
+                int barWidth = (int)(70 * (health / maxHealth));
                 AbstractGui.fill(ms, x + 42, y + 18, x + 112, y + 24, 0xFF550000);
-                // Full Bar (Bright Red)
-                AbstractGui.fill(ms, x + 42, y + 18, x + 42 + (int)healthWidth, y + 24, 0xFFFF0000);
+                AbstractGui.fill(ms, x + 42, y + 18, x + 42 + barWidth, y + 24, 0xFFFF0000);
+                
+                // HP Text
+                mc.fontRenderer.drawString(ms, (int)health + " HP", x + 42, y + 28, 0xFFFFFF);
             }
         }
     }
